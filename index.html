@@ -88,7 +88,6 @@
     }
 
     function buildUI() {
-      // Destroy existing charts before re-rendering
       if (pieChart) { pieChart.destroy(); pieChart = null; }
       if (barChart) { barChart.destroy(); barChart = null; }
       if (lineChart) { lineChart.destroy(); lineChart = null; }
@@ -144,8 +143,7 @@
       document.getElementById('search').addEventListener('input', updateTable);
       document.getElementById('filter').addEventListener('change', updateTable);
       document.getElementById('th-rate').addEventListener('click', () => {
-        sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
-        updateTable();
+        sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'; updateTable();
       });
 
       recalc();
@@ -185,47 +183,50 @@
         if (s && !(sg.name.toLowerCase().includes(s) || sg.no.toLowerCase().includes(s))) return;
         const tr = document.createElement('tr');
         ['no','name','present','absent','rate','status'].forEach(k => {
-          const td = document.createElement('td'); td.textContent = sg[k]; tr.appendChild(td);
+          const td = document.createElement('td');
+          td.textContent = sg[k];
+          if (k === 'status') {
+            if (sg.status === 'Geçti') td.style.color = 'blue';
+            else if (sg.status === 'Kaldı') td.style.color = 'orange';
+            else if (sg.status === 'Riskli') td.style.color = 'red';
+          }
+          tr.appendChild(td);
         });
         tbody.appendChild(tr);
       });
     }
 
     function updateCharts() {
-      const pieData = [
-        students.filter(s => s.status === 'Geçti').length,
-        students.filter(s => s.status === 'Riskli').length,
-        students.filter(s => s.status === 'Kaldı').length
-      ];
+      const pieData = [students.filter(s => s.status === 'Geçti').length,
+                       students.filter(s => s.status === 'Riskli').length,
+                       students.filter(s => s.status === 'Kaldı').length];
       if (pieChart) { pieChart.data.datasets[0].data = pieData; pieChart.options.plugins.legend.labels.font.size = 36; pieChart.update(); }
-      else {
-        pieChart = new Chart(document.getElementById('pie-chart').getContext('2d'), {
-          type: 'pie', data: { labels: ['Geçti','Riskli','Kaldı'], datasets: [{ data: pieData }] },
-          options: { plugins: { legend: { labels: { font: { size: 36 } } } } }
-        });
-      }
+      else { pieChart = new Chart(document.getElementById('pie-chart').getContext('2d'), {
+        type: 'pie', data: { labels: ['Geçti','Riskli','Kaldı'], datasets: [{ data: pieData }] },
+        options: { plugins: { legend: { labels: { font: { size: 36 } } } } }
+      }); }
+
       const bucket = Array(10).fill(0);
       students.forEach(s => { const idx = Math.min(9, Math.floor(s.rateNum / 10)); bucket[idx]++; });
       if (barChart) { barChart.data.datasets[0].data = bucket; barChart.update(); }
-      else {
-        barChart = new Chart(document.getElementById('bar-chart').getContext('2d'), {
-          type: 'bar', data: { labels: ['0-10','10-20','20-30','30-40','40-50','50-60','60-70','70-80','80-90','90-100'], datasets: [{ label: 'Katılım oranına göre öğrenci sayısı', data: bucket }] },
-          options: { plugins: { legend: { display: false }, title: { display: true, text: 'Katılım oranına göre öğrenci sayısı' } } }
-        });
-      }
+      else { barChart = new Chart(document.getElementById('bar-chart').getContext('2d'), {
+        type: 'bar', data: {
+          labels: ['0-10','10-20','20-30','30-40','40-50','50-60','60-70','70-80','80-90','90-100'],
+          datasets: [{ label: 'Katılım oranına göre öğrenci sayısı', data: bucket }]
+        }, options: { plugins: { legend: { display: false }, title: { display: true, text: 'Katılım oranına göre öğrenci sayısı' } } }
+      }); }
+
       const lineData = weeklyRatesFull.map(v => parseFloat(v));
       if (lineChart) { lineChart.data.datasets[0].data = lineData; lineChart.options.plugins.title.text = 'Haftalara göre katılım oranları'; lineChart.update(); }
-      else {
-        lineChart = new Chart(document.getElementById('line-chart').getContext('2d'), {
-          type: 'line', data: { labels: weeklyRatesFull.map((_,i)=>`Hafta ${i+1}`), datasets: [{ label: 'Haftalara göre katılım oranları', data: lineData, fill: false }] },
-          options: { plugins: { title: { display: true, text: 'Haftalara göre katılım oranları' } }, scales: { y: { beginAtZero: true, max: 100 } } }
-        });
-      }
+      else { lineChart = new Chart(document.getElementById('line-chart').getContext('2d'), {
+        type: 'line', data: { labels: weeklyRatesFull.map((_, i) => `Hafta ${i+1}`), datasets: [{ label: 'Haftalara göre katılım oranları', data: lineData, fill: false }] },
+        options: { plugins: { title: { display: true, text: 'Haftalara göre katılım oranları' } }, scales: { y: { beginAtZero: true, max: 100 } } }
+      }); }
     }
 
     function renderTopBottom() {
-      const sorted = students.slice().sort((a,b)=>b.rateNum-a.rateNum);
-      const top5 = sorted.slice(0,5), bottom5 = sorted.slice(-5).reverse();
+      const sorted = students.slice().sort((a, b) => b.rateNum - a.rateNum);
+      const top5 = sorted.slice(0, 5), bottom5 = sorted.slice(-5).reverse();
       const tEl = document.getElementById('top5'), bEl = document.getElementById('bottom5'); tEl.innerHTML = ''; bEl.innerHTML = '';
       top5.forEach(s => { const li = document.createElement('li'); li.textContent = `${s.name} (${s.rate}%)`; tEl.appendChild(li); });
       bottom5.forEach(s => { const li = document.createElement('li'); li.textContent = `${s.name} (${s.rate}%)`; bEl.appendChild(li); });
