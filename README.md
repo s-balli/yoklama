@@ -52,10 +52,9 @@ Bu uygulama, Burdur Mehmet Akif Ersoy Üniversitesi yoklama sisteminde bir derse
 
 ## Geliştirme
 
-* Yeni özellikler eklemek için `index.html` dosyasını düzenleyin.
-* Chart.js yapılandırmalarını `updateCharts()` fonksiyonunda.
-* Excel veri işleme adımlarını `processData()` fonksiyonunda bulun.
+* Chart.js yapılandırmaları `updateCharts()` fonksiyonundadır.
+* Excel veri işleme adımları `processData()` fonksiyonundadır.
 
 ---
 
-**Yoklama İstatistikleri Uygulaması** ile verilerinizi pratik bir şekilde analiz edin!
+
