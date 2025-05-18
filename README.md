@@ -1,5 +1,7 @@
 # Yoklama İstatistikleri Uygulaması
 
+https://s-balli.github.io/yoklama/
+
 Bu uygulama, Burdur Mehmet Akif Ersoy Üniversitesi yoklama sisteminde bir derse ait yoklama verilerini Excel dosyasından okuyup; istatistikleri hesaplayan, filtreleme, arama ve çeşitli grafiklerle görselleştiren basit bir HTML/JavaScript uygulamasıdır.
 
 ## Özellikler
