@@ -1,4 +1,4 @@
-# Yoklama İstatistikleri Uygulaması
+# Yoklama Analizi Uygulaması
 
 https://s-balli.github.io/yoklama/
 
