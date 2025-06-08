@@ -1,6 +1,6 @@
 # 📊 Yoklama Analizi Uygulaması
 
-Excel dosyasından öğrenci yoklama verilerini analiz eden, görselleştiren ve filtreleme imkanı sunan web tabanlı bir uygulama.
+Excel dosyasından öğrenci yoklama verilerini analiz eden, görselleştiren ve filtreleme imkanı sunan web tabanlı bir uygulama. MAKÜ yoklama sistemi ile uyumludur.
 
 https://s-balli.github.io/yoklama/
 
